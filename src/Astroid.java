@@ -1,3 +1,5 @@
+import java.awt.*;
+
 public class Astroid {
     public String name;                //holds the name of the hero
     public int xpos;                //the x position
@@ -6,7 +8,8 @@ public class Astroid {
     public int dy;                    //the speed of the hero in the y direction
     public int width;
     public int height;
-    public boolean isAlive;            //a boolean to denote if the hero is alive or dead.
+    public boolean isAlive;//a boolean to denote if the hero is alive or dead.
+    public Rectangle hitbox;
 
 
     // METHOD DEFINITION SECTION
@@ -20,36 +23,37 @@ public class Astroid {
     public Astroid(int pXpos, int pYpos) {
         xpos = pXpos;
         ypos = pYpos;
-        dx =5;
-        dy =5;
+        dx =25;
+        dy =25;
         width = 85;
         height = 85;
         isAlive = false;
+        hitbox= new Rectangle(xpos, ypos, width, height);
 
     } // constructor
 
     //The move method.  Everytime this is run (or "called") the hero's x position and y position change by dx and dy
     public void move() {
         if(xpos >=1000-width){
-            xpos=0;
+            dx=-dx;
 
         }
 
         if(xpos <=0){
-            xpos=999-width;
+            dx=-dx;
 
         }
         if(ypos <=0){
-            ypos=700-height;
-
+           dy=-dy;
         }
-        if(ypos >=750-height){
-            ypos=1;
+        if(ypos >=700-height){
+            dy=-dy;
 
         }
 
         xpos = xpos + dx;
         ypos = ypos + dy;
+        hitbox= new Rectangle(xpos, ypos, width, height);
 
     }
 }

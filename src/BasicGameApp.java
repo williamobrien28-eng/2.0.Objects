@@ -127,6 +127,12 @@ public class BasicGameApp implements Runnable {
           astro2.dy = -astro2.dy;
 
       }
+        if(astroid1.hitbox.intersects(astroid2.hitbox)){
+            System.out.println("Explode!!!");
+            astroid1.dy= -astroid1.dy;
+            astroid2.dy = -astroid2.dy;
+
+        }
 
 
     }
@@ -184,6 +190,8 @@ public class BasicGameApp implements Runnable {
         g.drawImage(astroidPic, astroid2.xpos, astroid2.ypos, astroid2.width, astroid2.height, null);
         g.drawRect(astro.hitbox.x, astro.hitbox.y,astro.hitbox.width,astro.hitbox.height);
         g.drawRect(astro2.hitbox.x, astro2.hitbox.y,astro2.hitbox.width,astro2.hitbox.height);
+        g.drawRect(astroid1.hitbox.x, astroid1.hitbox.y,astroid1.hitbox.width,astroid1.hitbox.height);
+        g.drawRect(astroid2.hitbox.x, astroid2.hitbox.y,astroid2.hitbox.width,astroid2.hitbox.height);
 
 
 
