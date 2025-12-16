@@ -40,6 +40,8 @@ public class BasicGameApp implements Runnable {
 	public BufferStrategy bufferStrategy;
 	public Image astroPic;
     public Image astroidPic;
+    public Image backGroundPic;
+
 
    //Declare the objects used in the program
    //These are things that are made up of more than one variable type
@@ -78,11 +80,13 @@ public class BasicGameApp implements Runnable {
       //variable and objects
       //create (construct) the objects needed for the game and load up 
 		astroPic = Toolkit.getDefaultToolkit().getImage("astronaut.png");
-        astroidPic = Toolkit.getDefaultToolkit().getImage("Astroid.jpg");//load the picture
+        astroidPic = Toolkit.getDefaultToolkit().getImage("Astroid.jpg");
+        backGroundPic = Toolkit.getDefaultToolkit().getImage("stars.jpeg");//load the picture
 		astro = new Astronaut(WIDTH/2,HEIGHT/2);
         astro2 = new Astronaut(randx,randy);
-        astroid1 = new Astroid(100,200);
-        astroid2 = new Astroid (250,300);
+        astroid1 = new Astroid(100,300);
+        astroid1.dx=-astroid1.dx;
+        astroid2 = new Astroid (250,250);
 
 
         //todo: make a variable randy that generated a random number between 1-699
@@ -121,18 +125,27 @@ public class BasicGameApp implements Runnable {
 
     public void crashing (){
       //check to see if my astros crash into eachother
-      if(astro.hitbox.intersects(astro2.hitbox)){
+      if(astro.hitbox.intersects(astro2.hitbox) && astro2.isAlive == true){
           System.out.println("CRASH!!!");
           astro.dy= -astro.dy;
           astro2.dy = -astro2.dy;
+          astro2.isAlive = false;
 
       }
-        if(astroid1.hitbox.intersects(astroid2.hitbox)){
+        if(astroid1.hitbox.intersects(astroid2.hitbox) && astroid1.isCrashing == false){
             System.out.println("Explode!!!");
-            astroid1.dy= -astroid1.dy;
-            astroid2.dy = -astroid2.dy;
+            astroid1.height += 50;
+            astroid1.isCrashing = true;
+        }
+       if(!astroid1.hitbox.intersects(astroid2.hitbox)){
+           //System.out.println("no intersection");
+           astroid1.isCrashing=false;
 
         }
+       if(astro.hitbox.intersects(astroid2.hitbox)){
+           astro.isAlive=false;
+
+       }
 
 
     }
@@ -182,10 +195,15 @@ public class BasicGameApp implements Runnable {
 	private void render() {
 		Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();
 		g.clearRect(0, 0, WIDTH, HEIGHT);
+        g.drawImage(backGroundPic, 0, 0, WIDTH, HEIGHT,null);
 
       //draw the image of the astronaut
-		g.drawImage(astroPic, astro.xpos, astro.ypos, astro.width, astro.height, null);
-        g.drawImage(astroPic, astro2.xpos, astro2.ypos, astro2.width, astro2.height, null);
+		if (astro.isAlive == true) {
+            g.drawImage(astroPic, astro.xpos, astro.ypos, astro.width, astro.height, null);
+        }
+        if(astro2.isAlive ==true) {
+            g.drawImage(astroPic, astro2.xpos, astro2.ypos, astro2.width, astro2.height, null);
+        }
         g.drawImage(astroidPic, astroid1.xpos, astroid1.ypos, astroid1.width, astroid1.height, null);
         g.drawImage(astroidPic, astroid2.xpos, astroid2.ypos, astroid2.width, astroid2.height, null);
         g.drawRect(astro.hitbox.x, astro.hitbox.y,astro.hitbox.width,astro.hitbox.height);

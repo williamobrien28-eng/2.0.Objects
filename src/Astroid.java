@@ -10,6 +10,7 @@ public class Astroid {
     public int height;
     public boolean isAlive;//a boolean to denote if the hero is alive or dead.
     public Rectangle hitbox;
+    public boolean isCrashing;
 
 
     // METHOD DEFINITION SECTION
@@ -23,31 +24,32 @@ public class Astroid {
     public Astroid(int pXpos, int pYpos) {
         xpos = pXpos;
         ypos = pYpos;
-        dx =25;
-        dy =25;
+        dx =10;
+        dy =0;
         width = 85;
         height = 85;
         isAlive = false;
         hitbox= new Rectangle(xpos, ypos, width, height);
+        isCrashing = false;
 
     } // constructor
 
     //The move method.  Everytime this is run (or "called") the hero's x position and y position change by dx and dy
     public void move() {
-        if(xpos >=1000-width){
-            dx=-dx;
+        if(xpos >=950-width){
+            xpos=50;
 
         }
 
         if(xpos <=0){
-            dx=-dx;
+            xpos=850;
 
         }
         if(ypos <=0){
-           dy=-dy;
+           ypos=1000;
         }
         if(ypos >=700-height){
-            dy=-dy;
+            ypos = 1;
 
         }
 
