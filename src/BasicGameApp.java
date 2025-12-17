@@ -142,7 +142,7 @@ public class BasicGameApp implements Runnable {
            astroid1.isCrashing=false;
 
         }
-       if(astro.hitbox.intersects(astroid2.hitbox)){
+       if(astro.hitbox.intersects(astroid1.hitbox)){
            astro.isAlive=false;
 
        }
