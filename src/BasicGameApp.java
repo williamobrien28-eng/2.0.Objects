@@ -13,6 +13,8 @@
 
 //Graphics Libraries
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 import java.awt.*;
 import javax.swing.JFrame;
@@ -21,8 +23,9 @@ import javax.swing.JPanel;
 
 //*******************************************************************************
 // Class Definition Section
+//step 1: implement keyLister
 
-public class BasicGameApp implements Runnable {
+public class BasicGameApp implements Runnable, KeyListener {
 
    //Variable Definition Section
    //Declare the variables used in the program 
@@ -123,7 +126,7 @@ public class BasicGameApp implements Runnable {
 
 	}
 
-    public void crashing (){
+   public void crashing (){
       //check to see if my astros crash into eachother
       if(astro.hitbox.intersects(astro2.hitbox) && astro2.isAlive == true){
           System.out.println("CRASH!!!");
@@ -142,7 +145,7 @@ public class BasicGameApp implements Runnable {
            astroid1.isCrashing=false;
 
         }
-       if(astro.hitbox.intersects(astroid1.hitbox)){
+        if(astro.hitbox.intersects(astroid1.hitbox)){
            astro.isAlive=false;
 
        }
@@ -170,7 +173,11 @@ public class BasicGameApp implements Runnable {
    
       // creates a canvas which is a blank rectangular area of the screen onto which the application can draw
       // and trap input events (Mouse and Keyboard events)
-      canvas = new Canvas();  
+      canvas = new Canvas();
+
+      //step 2: set canvas as the key listener
+       canvas.addKeyListener(this);
+
       canvas.setBounds(0, 0, WIDTH, HEIGHT);
       canvas.setIgnoreRepaint(true);
    
@@ -198,9 +205,9 @@ public class BasicGameApp implements Runnable {
         g.drawImage(backGroundPic, 0, 0, WIDTH, HEIGHT,null);
 
       //draw the image of the astronaut
-		if (astro.isAlive == true) {
+
             g.drawImage(astroPic, astro.xpos, astro.ypos, astro.width, astro.height, null);
-        }
+
         if(astro2.isAlive ==true) {
             g.drawImage(astroPic, astro2.xpos, astro2.ypos, astro2.width, astro2.height, null);
         }
@@ -217,4 +224,44 @@ public class BasicGameApp implements Runnable {
 
 		bufferStrategy.show();
 	}
+    //step 3: add key listener methods
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        System.out.println("key typed " + e.getKeyCode());
+        if(e.getKeyCode() ==38){
+            System.out.println("pressed up arrow");
+           // astro.ypos =astro.ypos-50;
+            astro.dy = -Math.abs(astro.dy);
+        }
+        if(e.getKeyCode() ==40){
+            System.out.println("pressed down arrow");
+            // astro.ypos =astro.ypos-50;
+            astro.dy = Math.abs(astro.dy);
+        }
+        if(e.getKeyCode() ==37){
+            System.out.println("pressed left arrow");
+            // astro.ypos =astro.ypos-50;
+            astro.dx = -Math.abs(astro.dx);
+        }
+        if(e.getKeyCode() ==39){
+            System.out.println("pressed right arrow");
+            // astro.ypos =astro.ypos-50;
+            astro.dx = Math.abs(astro.dx);
+        }
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
+
+
+
 }

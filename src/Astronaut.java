@@ -29,8 +29,8 @@ public class Astronaut {
     public Astronaut(int pXpos, int pYpos) {
         xpos = pXpos;
         ypos = pYpos;
-        dx =25;
-        dy =25;
+        dx =10;
+        dy =10;
         width = 60;
         height = 60;
         isAlive = true;
