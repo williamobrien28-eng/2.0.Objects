@@ -24,8 +24,8 @@ public class Astroid {
     public Astroid(int pXpos, int pYpos) {
         xpos = pXpos;
         ypos = pYpos;
-        dx =10;
-        dy =0;
+        dx =3;
+        dy =1;
         width = 85;
         height = 85;
         isAlive = false;
