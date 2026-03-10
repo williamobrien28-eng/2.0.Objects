@@ -55,6 +55,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
     private Astronaut astro2;
     private Astroid astroid1;
     private Astroid astroid2;
+    public Astroid[] astroids;
 
 
     // Main method definition
@@ -93,6 +94,12 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         astroid1 = new Astroid(100, 300);
         astroid1.dx = -astroid1.dx;
         astroid2 = new Astroid(250, 250);
+        astroids = new Astroid[5];
+        for (int q=0; q< astroids.length; q++){
+            astroids[q] = new Astroid ((int)(Math.random() *1000), (int)(Math.random()*700));
+
+
+        }
 
 
         //todo: make a variable randy that generated a random number between 1-699
@@ -151,6 +158,15 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
             astro.isAlive = false;
 
         }
+        if (astro.hitbox.intersects(astroid2.hitbox)) {
+            astro.isAlive = false;
+
+        }
+        if (astro2.hitbox.intersects(astroid2.hitbox)) {
+            astro.isAlive = false;
+
+        }
+
 
 
     }
@@ -209,8 +225,8 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         g.drawImage(backGroundPic, 0, 0, WIDTH, HEIGHT, null);
 
         //draw the image of the astronaut
-
-        g.drawImage(astroPic, astro.xpos, astro.ypos, astro.width, astro.height, null);
+        if (astro.isAlive == true) {
+        g.drawImage(astroPic, astro.xpos, astro.ypos, astro.width, astro.height, null);}
 
         if (astro2.isAlive == true) {
             g.drawImage(astroPic, astro2.xpos, astro2.ypos, astro2.width, astro2.height, null);
@@ -221,6 +237,10 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         g.drawRect(astro2.hitbox.x, astro2.hitbox.y, astro2.hitbox.width, astro2.hitbox.height);
         g.drawRect(astroid1.hitbox.x, astroid1.hitbox.y, astroid1.hitbox.width, astroid1.hitbox.height);
         g.drawRect(astroid2.hitbox.x, astroid2.hitbox.y, astroid2.hitbox.width, astroid2.hitbox.height);
+        for (int z=0; z < astroids.length; z++){
+            g.drawImage(astroidPic, astroids[z].xpos, astroids[z].ypos, astroids[z].width, astroids[z].height, null);
+
+        }
 
 
         g.dispose();
