@@ -132,6 +132,9 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         astroid1.move();
         astroid2.move();
         crashing();
+        for (int i = 0; i < astroids.length; i++) {
+            astroids[i].move();
+        }
 
     }
 
