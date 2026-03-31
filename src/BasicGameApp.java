@@ -44,18 +44,17 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
     public JPanel panel;
 
     public BufferStrategy bufferStrategy;
-    public Image astroPic;
-    public Image astroidPic;
+    public Image cowboyPic;
+    public Image zombiePic;
     public Image backGroundPic;
 
 
     //Declare the objects used in the program
     //These are things that are made up of more than one variable type
-    private Astronaut astro;
-    private Astronaut astro2;
-    private Astroid astroid1;
-    private Astroid astroid2;
-    public Astroid[] astroids;
+    private Cowboy cowboy;
+    private Zombie zombie1;
+    private Zombie zombie2;
+    public Zombie[] zombies;
 
 
     // Main method definition
@@ -86,17 +85,16 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
 
         //variable and objects
         //create (construct) the objects needed for the game and load up
-        astroPic = Toolkit.getDefaultToolkit().getImage("astronaut.png");
-        astroidPic = Toolkit.getDefaultToolkit().getImage("Astroid.jpg");
-        backGroundPic = Toolkit.getDefaultToolkit().getImage("stars.jpeg");//load the picture
-        astro = new Astronaut(WIDTH / 2, HEIGHT / 2);
-        astro2 = new Astronaut(randx, randy);
-        astroid1 = new Astroid(100, 300);
-        astroid1.dx = -astroid1.dx;
-        astroid2 = new Astroid(250, 250);
-        astroids = new Astroid[5];
-        for (int q=0; q< astroids.length; q++){
-            astroids[q] = new Astroid ((int)(Math.random() *1000), (int)(Math.random()*700));
+        cowboyPic = Toolkit.getDefaultToolkit().getImage("Cowboy.jpg");
+        zombiePic = Toolkit.getDefaultToolkit().getImage("Zombie.jpg");
+        backGroundPic = Toolkit.getDefaultToolkit().getImage("City.jpg");//load the picture
+        cowboy = new Cowboy(WIDTH / 2, HEIGHT / 2);
+        zombie1 = new Zombie(100, 300);
+        zombie1.dx = -zombie1.dx;
+        zombie2 = new Zombie(250, 250);
+        zombies = new Zombie[5];
+        for (int q = 0; q< zombies.length; q++){
+            zombies[q] = new Zombie((int)(Math.random() *1000), (int)(Math.random()*700));
 
 
         }
@@ -127,46 +125,44 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
 
     public void moveThings() {
         //calls the move( ) code in the objects
-        astro.move();
-        astro2.move();
-        astroid1.move();
-        astroid2.move();
+        cowboy.move();
+        zombie1.move();
+        zombie2.move();
         crashing();
-        for (int i = 0; i < astroids.length; i++) {
-            astroids[i].move();
+        for (int i = 0; i < zombies.length; i++) {
+            zombies[i].move();
         }
 
     }
 
     public void crashing() {
         //check to see if my astros crash into eachother
-        if (astro.hitbox.intersects(astro2.hitbox) && astro2.isAlive == true) {
-            System.out.println("CRASH!!!");
-            astro.dy = -astro.dy;
-            astro2.dy = -astro2.dy;
-            astro2.isAlive = false;
 
-        }
-        if (astroid1.hitbox.intersects(astroid2.hitbox) && astroid1.isCrashing == false) {
+        if (zombie1.hitbox.intersects(zombie2.hitbox) && zombie1.isCrashing == false) {
             System.out.println("Explode!!!");
-            astroid1.height += 50;
-            astroid1.isCrashing = true;
+            zombie1.height += 50;
+            zombie1.isCrashing = true;
         }
-        if (!astroid1.hitbox.intersects(astroid2.hitbox)) {
+        if (!zombie1.hitbox.intersects(zombie2.hitbox)) {
             //System.out.println("no intersection");
-            astroid1.isCrashing = false;
+            zombie1.isCrashing = false;
 
         }
-        if (astro.hitbox.intersects(astroid1.hitbox)) {
-            astro.isAlive = false;
+        if (cowboy.hitbox.intersects(zombie1.hitbox)) {
+            cowboy.isAlive = false;
 
         }
-        if (astro.hitbox.intersects(astroid2.hitbox)) {
-            astro.isAlive = false;
+        if (cowboy.hitbox.intersects(zombie2.hitbox)) {
+            cowboy.isAlive = false;
 
         }
-        if (astro2.hitbox.intersects(astroid2.hitbox)) {
-            astro.isAlive = false;
+
+        for (int x = 0; x< zombies.length; x++) {
+            if (zombies[x].hitbox.intersects(cowboy.hitbox)){
+                cowboy.isAlive= false;
+                System.out.println("Crashing");
+            }
+
 
         }
 
@@ -228,20 +224,17 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         g.drawImage(backGroundPic, 0, 0, WIDTH, HEIGHT, null);
 
         //draw the image of the astronaut
-        if (astro.isAlive == true) {
-        g.drawImage(astroPic, astro.xpos, astro.ypos, astro.width, astro.height, null);}
+        if (cowboy.isAlive == true) {
+        g.drawImage(cowboyPic, cowboy.xpos, cowboy.ypos, cowboy.width, cowboy.height, null);}
 
-        if (astro2.isAlive == true) {
-            g.drawImage(astroPic, astro2.xpos, astro2.ypos, astro2.width, astro2.height, null);
-        }
-        g.drawImage(astroidPic, astroid1.xpos, astroid1.ypos, astroid1.width, astroid1.height, null);
-        g.drawImage(astroidPic, astroid2.xpos, astroid2.ypos, astroid2.width, astroid2.height, null);
-        g.drawRect(astro.hitbox.x, astro.hitbox.y, astro.hitbox.width, astro.hitbox.height);
-        g.drawRect(astro2.hitbox.x, astro2.hitbox.y, astro2.hitbox.width, astro2.hitbox.height);
-        g.drawRect(astroid1.hitbox.x, astroid1.hitbox.y, astroid1.hitbox.width, astroid1.hitbox.height);
-        g.drawRect(astroid2.hitbox.x, astroid2.hitbox.y, astroid2.hitbox.width, astroid2.hitbox.height);
-        for (int z=0; z < astroids.length; z++){
-            g.drawImage(astroidPic, astroids[z].xpos, astroids[z].ypos, astroids[z].width, astroids[z].height, null);
+
+        g.drawImage(zombiePic, zombie1.xpos, zombie1.ypos, zombie1.width, zombie1.height, null);
+        g.drawImage(zombiePic, zombie2.xpos, zombie2.ypos, zombie2.width, zombie2.height, null);
+        g.drawRect(cowboy.hitbox.x, cowboy.hitbox.y, cowboy.hitbox.width, cowboy.hitbox.height);
+        g.drawRect(zombie1.hitbox.x, zombie1.hitbox.y, zombie1.hitbox.width, zombie1.hitbox.height);
+        g.drawRect(zombie2.hitbox.x, zombie2.hitbox.y, zombie2.hitbox.width, zombie2.hitbox.height);
+        for (int z = 0; z < zombies.length; z++){
+            g.drawImage(zombiePic, zombies[z].xpos, zombies[z].ypos, zombies[z].width, zombies[z].height, null);
 
         }
 
@@ -263,22 +256,22 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         if (e.getKeyCode() == 38) {
             System.out.println("pressed up arrow");
             // astro.ypos =astro.ypos-50;
-            astro.dy = -7;
+            cowboy.dy = -7;
         }
         if (e.getKeyCode() == 40) {
             System.out.println("pressed down arrow");
-            // astro.ypos =astro.ypos-50;
-            astro.dy = 7;
+            // .ypos =.ypos-50;
+            cowboy.dy = 7;
         }
         if (e.getKeyCode() == 37) {
             System.out.println("pressed left arrow");
-            // astro.ypos =astro.ypos-50;
-            astro.dx = -10;
+            // co.ypos =astro.ypos-50;
+            cowboy.dx = -10;
         }
         if (e.getKeyCode() == 39) {
             System.out.println("pressed right arrow");
             // astro.ypos =astro.ypos-50;
-            astro.dx = 10;
+            cowboy.dx = 10;
         }
 
     }
@@ -289,26 +282,26 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         if (e.getKeyCode() == 38) {
             System.out.println(" not pressed up arrow");
             // astro.ypos =astro.ypos-50;
-            astro.dy = 0;
+            cowboy.dy = 0;
 
         }
         System.out.println("key typed " + e.getKeyCode());
         if (e.getKeyCode() == 40) {
             System.out.println(" not pressed down arrow");
             // astro.ypos =astro.ypos-50;
-            astro.dy = 0;
+            cowboy.dy = 0;
         }
         System.out.println("key typed " + e.getKeyCode());
         if (e.getKeyCode() == 37) {
             System.out.println(" not pressed down arrow");
             // astro.ypos =astro.ypos-50;
-            astro.dx = 0;
+            cowboy.dx = 0;
         }
         System.out.println("key typed " + e.getKeyCode());
         if (e.getKeyCode() == 39) {
             System.out.println(" not pressed down arrow");
             // astro.ypos =astro.ypos-50;
-            astro.dx = 0;
+            cowboy.dx = 0;
         }
     }
 // step 3 : add methods
@@ -321,11 +314,11 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
     @Override
     public void mousePressed(MouseEvent e) {
         System.out.println(e.getPoint());
-        astroid2.xpos = e.getX();
-        astroid2.ypos = e.getY();
+        zombie2.xpos = e.getX();
+        zombie2.ypos = e.getY();
 
-        astro.width= astro.width +3;
-        astro.height= astro.height +3;
+        cowboy.width= cowboy.width +3;
+        cowboy.height= cowboy.height +3;
 
 
 
@@ -341,27 +334,13 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
     @Override
     public void mouseEntered(MouseEvent e) {
         System.out.println("entered!!");
-        astro.dx = 0;
-        astro.dy = 0;
-        astroid2.dx= 3;
-        astroid2.dy=1;
-        astro2.dx=3;
-        astro2.dy=3;
-        astroid1.dx=3;
-        astroid1.dy=1;
+
 
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        astro.dx = 0;
-        astro.dy = 0;
-        astroid2.dx= 0;
-        astroid2.dy=0;
-        astro2.dx=0;
-        astro2.dy=0;
-        astroid1.dx=0;
-        astroid1.dy=0;
+
 
 
 

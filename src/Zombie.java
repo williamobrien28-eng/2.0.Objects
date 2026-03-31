@@ -1,6 +1,6 @@
 import java.awt.*;
 
-public class Astroid {
+public class Zombie {
     public String name;                //holds the name of the hero
     public int xpos;                //the x position
     public int ypos;                //the y position
@@ -21,7 +21,7 @@ public class Astroid {
 
     //This is a SECOND constructor that takes 3 parameters.  This allows us to specify the hero's name and position when we build it.
     // if you put in a String, an int and an int the program will use this constructor instead of the one above.
-    public Astroid(int pXpos, int pYpos) {
+    public Zombie(int pXpos, int pYpos) {
         xpos = pXpos;
         ypos = pYpos;
         dx =3;
