@@ -28,7 +28,7 @@ public class Zombie {
         dy =1;
         width = 85;
         height = 85;
-        isAlive = false;
+        isAlive = true;
         hitbox= new Rectangle(xpos, ypos, width, height);
         isCrashing = false;
 

@@ -47,6 +47,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
     public Image cowboyPic;
     public Image zombiePic;
     public Image backGroundPic;
+    public Image curePic;
 
 
     //Declare the objects used in the program
@@ -55,6 +56,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
     private Zombie zombie1;
     private Zombie zombie2;
     public Zombie[] zombies;
+    public Cure cure;
 
 
     // Main method definition
@@ -88,11 +90,13 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         cowboyPic = Toolkit.getDefaultToolkit().getImage("Cowboy.jpg");
         zombiePic = Toolkit.getDefaultToolkit().getImage("Zombie.jpg");
         backGroundPic = Toolkit.getDefaultToolkit().getImage("City.jpg");//load the picture
+        curePic = Toolkit.getDefaultToolkit().getImage("Cure.jpeg");
         cowboy = new Cowboy(WIDTH / 2, HEIGHT / 2);
         zombie1 = new Zombie(100, 300);
         zombie1.dx = -zombie1.dx;
         zombie2 = new Zombie(250, 250);
         zombies = new Zombie[5];
+        cure = new Cure(100,100);
         for (int q = 0; q< zombies.length; q++){
             zombies[q] = new Zombie((int)(Math.random() *1000), (int)(Math.random()*700));
 
@@ -157,6 +161,10 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
 
         }
 
+        if (cowboy.hitbox.intersects(cure.hitbox)&& cowboy.isAlive == true){
+            zombie1.isAlive = false;
+        }
+
         for (int x = 0; x< zombies.length; x++) {
             if (zombies[x].hitbox.intersects(cowboy.hitbox)){
                 cowboy.isAlive= false;
@@ -165,6 +173,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
 
 
         }
+
 
 
 
@@ -225,18 +234,25 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
 
         //draw the image of the astronaut
         if (cowboy.isAlive == true) {
-        g.drawImage(cowboyPic, cowboy.xpos, cowboy.ypos, cowboy.width, cowboy.height, null);}
+        g.drawImage(cowboyPic, cowboy.xpos, cowboy.ypos, cowboy.width, cowboy.height, null);
+            g.drawRect(cowboy.hitbox.x, cowboy.hitbox.y, cowboy.hitbox.width, cowboy.hitbox.height);
+        }
 
-
+        if (zombie1.isAlive == true){
         g.drawImage(zombiePic, zombie1.xpos, zombie1.ypos, zombie1.width, zombie1.height, null);
+            g.drawRect(zombie1.hitbox.x, zombie1.hitbox.y, zombie1.hitbox.width, zombie1.hitbox.height);
+        }
+        if (zombie2.isAlive == true){
         g.drawImage(zombiePic, zombie2.xpos, zombie2.ypos, zombie2.width, zombie2.height, null);
-        g.drawRect(cowboy.hitbox.x, cowboy.hitbox.y, cowboy.hitbox.width, cowboy.hitbox.height);
-        g.drawRect(zombie1.hitbox.x, zombie1.hitbox.y, zombie1.hitbox.width, zombie1.hitbox.height);
-        g.drawRect(zombie2.hitbox.x, zombie2.hitbox.y, zombie2.hitbox.width, zombie2.hitbox.height);
+            g.drawRect(zombie2.hitbox.x, zombie2.hitbox.y, zombie2.hitbox.width, zombie2.hitbox.height);
+        }
+        if (zombie1.isAlive == true && zombie2.isAlive == true){
         for (int z = 0; z < zombies.length; z++){
-            g.drawImage(zombiePic, zombies[z].xpos, zombies[z].ypos, zombies[z].width, zombies[z].height, null);
+            g.drawImage(zombiePic, zombies[z].xpos, zombies[z].ypos, zombies[z].width, zombies[z].height, null);}
 
         }
+        g.drawImage(curePic, cure.xpos, cure.ypos, cure.width, cure.height, null);
+
 
 
         g.dispose();
