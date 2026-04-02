@@ -95,10 +95,10 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         zombie1 = new Zombie(100, 300);
         zombie1.dx = -zombie1.dx;
         zombie2 = new Zombie(250, 250);
-        zombies = new Zombie[5];
+        zombies = new Zombie[10];
         cure = new Cure(100,100);
         for (int q = 0; q< zombies.length; q++){
-            zombies[q] = new Zombie((int)(Math.random() *1000), (int)(Math.random()*700));
+            zombies[q] = new Zombie((int)(Math.random() *1000), (int)(Math.random()*100));
 
 
         }
@@ -142,21 +142,17 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
     public void crashing() {
         //check to see if my astros crash into eachother
 
-        if (zombie1.hitbox.intersects(zombie2.hitbox) && zombie1.isCrashing == false) {
-            System.out.println("Explode!!!");
-            zombie1.height += 50;
-            zombie1.isCrashing = true;
-        }
-        if (!zombie1.hitbox.intersects(zombie2.hitbox)) {
+
+        if (zombie1.hitbox.intersects(zombie2.hitbox)) {
             //System.out.println("no intersection");
             zombie1.isCrashing = false;
 
         }
-        if (cowboy.hitbox.intersects(zombie1.hitbox)) {
+        if (cowboy.hitbox.intersects(zombie1.hitbox)&& zombie1.isAlive==true) {
             cowboy.isAlive = false;
 
         }
-        if (cowboy.hitbox.intersects(zombie2.hitbox)) {
+        if (cowboy.hitbox.intersects(zombie2.hitbox) && zombie2.isAlive== true) {
             cowboy.isAlive = false;
 
         }
@@ -166,7 +162,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         }
 
         for (int x = 0; x< zombies.length; x++) {
-            if (zombies[x].hitbox.intersects(cowboy.hitbox)){
+            if (zombies[x].hitbox.intersects(cowboy.hitbox)&&zombies[x].isAlive==true){
                 cowboy.isAlive= false;
                 System.out.println("Crashing");
             }
@@ -330,11 +326,12 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
     @Override
     public void mousePressed(MouseEvent e) {
         System.out.println(e.getPoint());
-        zombie2.xpos = e.getX();
-        zombie2.ypos = e.getY();
 
-        cowboy.width= cowboy.width +3;
-        cowboy.height= cowboy.height +3;
+
+        cowboy.width= cowboy.width -5;
+        cowboy.height= cowboy.height -5;
+        for (int x=0; x< zombies.length; x++){
+        zombies[x].height = zombies[x].height-3;}
 
 
 
@@ -344,6 +341,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
 
     @Override
     public void mouseReleased(MouseEvent e) {
+
 
     }
 
