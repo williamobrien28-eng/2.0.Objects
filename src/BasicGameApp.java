@@ -48,6 +48,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
     public Image zombiePic;
     public Image backGroundPic;
     public Image curePic;
+    public Image bulletPic;
 
 
     //Declare the objects used in the program
@@ -57,6 +58,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
     private Zombie zombie2;
     public Zombie[] zombies;
     public Cure cure;
+    public Bullet bullet;
 
 
     // Main method definition
@@ -91,12 +93,14 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         zombiePic = Toolkit.getDefaultToolkit().getImage("Zombie.jpg");
         backGroundPic = Toolkit.getDefaultToolkit().getImage("City.jpg");//load the picture
         curePic = Toolkit.getDefaultToolkit().getImage("Cure.jpeg");
+        bulletPic = Toolkit.getDefaultToolkit().getImage("Bullet.jpg");
         cowboy = new Cowboy(WIDTH / 2, HEIGHT / 2);
         zombie1 = new Zombie(100, 300);
         zombie1.dx = -zombie1.dx;
         zombie2 = new Zombie(250, 250);
         zombies = new Zombie[10];
         cure = new Cure(100,100);
+        bullet = new Bullet(100,100);
         for (int q = 0; q< zombies.length; q++){
             zombies[q] = new Zombie((int)(Math.random() *1000), (int)(Math.random()*100));
 
@@ -132,6 +136,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         cowboy.move();
         zombie1.move();
         zombie2.move();
+        bullet.move();
         crashing();
         for (int i = 0; i < zombies.length; i++) {
             zombies[i].move();
@@ -168,6 +173,17 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
             }
 
 
+        }
+        if (bullet.hitbox.intersects(zombie1.hitbox)&& bullet.isAlive == true){
+            zombie1.isAlive = false;
+        }
+        if (bullet.hitbox.intersects(zombie2.hitbox)&& bullet.isAlive == true){
+            zombie1.isAlive = false;
+        }
+        for (int x = 0; x< zombies.length; x++) {
+            if (bullet.hitbox.intersects(zombies[x].hitbox) && bullet.isAlive == true) {
+                zombies[x].isAlive = false;
+            }
         }
 
 
@@ -248,6 +264,8 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
 
         }
         g.drawImage(curePic, cure.xpos, cure.ypos, cure.width, cure.height, null);
+        g.drawImage(bulletPic, bullet.xpos, bullet.ypos, bullet.width, bullet.height, null);
+
 
 
 
@@ -327,11 +345,10 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
     public void mousePressed(MouseEvent e) {
         System.out.println(e.getPoint());
 
+        bullet.isAlive = true;
+        bullet.xpos = e.getX();
+        bullet.ypos = e.getY();
 
-        cowboy.width= cowboy.width -5;
-        cowboy.height= cowboy.height -5;
-        for (int x=0; x< zombies.length; x++){
-        zombies[x].height = zombies[x].height-3;}
 
 
 
@@ -341,6 +358,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
 
     @Override
     public void mouseReleased(MouseEvent e) {
+
 
 
     }
