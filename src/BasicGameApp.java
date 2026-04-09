@@ -12,6 +12,7 @@
 //import java.awt.Canvas;
 
 //Graphics Libraries
+
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -49,6 +50,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
     public Image backGroundPic;
     public Image curePic;
     public Image bulletPic;
+    public Image bossPic;
 
 
     //Declare the objects used in the program
@@ -59,6 +61,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
     public Zombie[] zombies;
     public Cure cure;
     public Bullet bullet;
+    private Boss boss;
 
 
     // Main method definition
@@ -94,15 +97,17 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         backGroundPic = Toolkit.getDefaultToolkit().getImage("City.jpg");//load the picture
         curePic = Toolkit.getDefaultToolkit().getImage("Cure.jpeg");
         bulletPic = Toolkit.getDefaultToolkit().getImage("Bullet.jpg");
+        bossPic = Toolkit.getDefaultToolkit().getImage("Boss.jpg");
         cowboy = new Cowboy(WIDTH / 2, HEIGHT / 2);
         zombie1 = new Zombie(100, 300);
         zombie1.dx = -zombie1.dx;
         zombie2 = new Zombie(250, 250);
         zombies = new Zombie[10];
-        cure = new Cure(100,100);
-        bullet = new Bullet(100,100);
-        for (int q = 0; q< zombies.length; q++){
-            zombies[q] = new Zombie((int)(Math.random() *1000), (int)(Math.random()*100));
+        boss = new Boss(100, 300);
+        cure = new Cure(100, 100);
+        bullet = new Bullet(100, 100);
+        for (int q = 0; q < zombies.length; q++) {
+            zombies[q] = new Zombie((int) (Math.random() * 1000), (int) (Math.random() * 100));
 
 
         }
@@ -137,6 +142,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         zombie1.move();
         zombie2.move();
         bullet.move();
+        boss.move();
         crashing();
         for (int i = 0; i < zombies.length; i++) {
             zombies[i].move();
@@ -153,40 +159,48 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
             zombie1.isCrashing = false;
 
         }
-        if (cowboy.hitbox.intersects(zombie1.hitbox)&& zombie1.isAlive==true) {
+        if (cowboy.hitbox.intersects(zombie1.hitbox) && zombie1.isAlive == true) {
             cowboy.isAlive = false;
 
         }
-        if (cowboy.hitbox.intersects(zombie2.hitbox) && zombie2.isAlive== true) {
+        if (cowboy.hitbox.intersects(zombie2.hitbox) && zombie2.isAlive == true) {
             cowboy.isAlive = false;
 
         }
 
-        if (cowboy.hitbox.intersects(cure.hitbox)&& cowboy.isAlive == true){
+        if (cowboy.hitbox.intersects(cure.hitbox) && cowboy.isAlive == true) {
             zombie1.isAlive = false;
         }
 
-        for (int x = 0; x< zombies.length; x++) {
-            if (zombies[x].hitbox.intersects(cowboy.hitbox)&&zombies[x].isAlive==true){
-                cowboy.isAlive= false;
+        for (int x = 0; x < zombies.length; x++) {
+            if (zombies[x].hitbox.intersects(cowboy.hitbox) && zombies[x].isAlive == true) {
+                cowboy.isAlive = false;
                 System.out.println("Crashing");
             }
 
 
         }
-        if (bullet.hitbox.intersects(zombie1.hitbox)&& bullet.isAlive == true){
+        if (bullet.hitbox.intersects(zombie1.hitbox) && bullet.isAlive == true) {
             zombie1.isAlive = false;
         }
-        if (bullet.hitbox.intersects(zombie2.hitbox)&& bullet.isAlive == true){
-            zombie1.isAlive = false;
+        if (bullet.hitbox.intersects(zombie2.hitbox) && bullet.isAlive == true) {
+            zombie2.isAlive = false;
         }
-        for (int x = 0; x< zombies.length; x++) {
-            if (bullet.hitbox.intersects(zombies[x].hitbox) && bullet.isAlive == true) {
+        for (int x = 0; x < zombies.length; x++) {
+            if (zombies[x].isAlive == true && bullet.isAlive == true && bullet.hitbox.intersects(zombies[x].hitbox)) {
                 zombies[x].isAlive = false;
+                bullet.isAlive = false;   // bullet disappears after one hit
+                // stop after killing one zombie
             }
         }
 
+        if (bullet.isAlive && boss.isAlive && bullet.hitbox.intersects(boss.hitbox)) {
+            boss.health -= 5;   // bullet does 5 damage
+            bullet.isAlive = false;}
 
+        if (boss.health <= 0) {
+            boss.health = 0;
+            boss.isAlive = false;}
 
 
     }
@@ -246,25 +260,56 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
 
         //draw the image of the astronaut
         if (cowboy.isAlive == true) {
-        g.drawImage(cowboyPic, cowboy.xpos, cowboy.ypos, cowboy.width, cowboy.height, null);
+            g.drawImage(cowboyPic, cowboy.xpos, cowboy.ypos, cowboy.width, cowboy.height, null);
             g.drawRect(cowboy.hitbox.x, cowboy.hitbox.y, cowboy.hitbox.width, cowboy.hitbox.height);
         }
 
-        if (zombie1.isAlive == true){
-        g.drawImage(zombiePic, zombie1.xpos, zombie1.ypos, zombie1.width, zombie1.height, null);
+        if (zombie1.isAlive == true) {
+            g.drawImage(zombiePic, zombie1.xpos, zombie1.ypos, zombie1.width, zombie1.height, null);
             g.drawRect(zombie1.hitbox.x, zombie1.hitbox.y, zombie1.hitbox.width, zombie1.hitbox.height);
         }
-        if (zombie2.isAlive == true){
-        g.drawImage(zombiePic, zombie2.xpos, zombie2.ypos, zombie2.width, zombie2.height, null);
+        if (zombie2.isAlive == true) {
+            g.drawImage(zombiePic, zombie2.xpos, zombie2.ypos, zombie2.width, zombie2.height, null);
             g.drawRect(zombie2.hitbox.x, zombie2.hitbox.y, zombie2.hitbox.width, zombie2.hitbox.height);
         }
-        if (zombie1.isAlive == true && zombie2.isAlive == true){
-        for (int z = 0; z < zombies.length; z++){
-            g.drawImage(zombiePic, zombies[z].xpos, zombies[z].ypos, zombies[z].width, zombies[z].height, null);}
+        for (int z = 0; z < zombies.length; z++) {
+        if (zombies[z].isAlive == true) {
+            g.drawImage(zombiePic, zombies[z].xpos, zombies[z].ypos, zombies[z].width, zombies[z].height, null);
+        }
 
         }
         g.drawImage(curePic, cure.xpos, cure.ypos, cure.width, cure.height, null);
-        g.drawImage(bulletPic, bullet.xpos, bullet.ypos, bullet.width, bullet.height, null);
+        if (bullet.isAlive == true) {
+            g.drawImage(bulletPic, bullet.xpos, bullet.ypos, bullet.width, bullet.height, null);
+        }
+        for (int x=0; x<zombies.length; x++) {
+            if (zombies[x].isAlive == false && zombie1.isAlive == false && zombie2.isAlive == false) {
+                g.drawImage(bossPic, boss.xpos, boss.ypos, boss.width, boss.height, null);
+                // HEALTH BAR
+                int hbarWidth = 200;
+                int hbarHeight = 20;
+                int barX = boss.xpos + 100;   // centers it a little over boss
+                int barY = boss.ypos - 30;    // above boss
+                // background (red = missing health)
+                g.setColor(Color.RED);
+                g.fillRect(barX, barY, hbarWidth, hbarHeight);
+                // current health (green)
+                g.setColor(Color.GREEN);
+                g.fillRect(barX, barY, (boss.health * hbarWidth) / boss.maxHealth, hbarHeight);
+                //outline
+                g.setColor(Color.BLACK);
+                g.drawRect(barX, barY, hbarWidth, hbarHeight);
+            }
+
+        }
+
+
+
+
+        }
+
+
+
 
 
 
@@ -334,7 +379,8 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
             cowboy.dx = 0;
         }
     }
-// step 3 : add methods
+
+    // step 3 : add methods
     @Override
     public void mouseClicked(MouseEvent e) {
 
@@ -350,15 +396,10 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         bullet.ypos = e.getY();
 
 
-
-
-
-
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-
 
 
     }
@@ -374,7 +415,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
     public void mouseExited(MouseEvent e) {
 
 
+     }
 
 
-    }
-}
+
