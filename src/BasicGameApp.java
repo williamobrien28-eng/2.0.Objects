@@ -196,11 +196,12 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
 
         if (bullet.isAlive && boss.isAlive && bullet.hitbox.intersects(boss.hitbox)) {
             boss.health -= 5;   // bullet does 5 damage
-            bullet.isAlive = false;}
+            bullet.isAlive = false;
+        }
 
-        if (boss.health <= 0) {
-            boss.health = 0;
-            boss.isAlive = false;}
+        if (boss.health == 0) {
+            boss.isAlive = false;
+        }
 
 
     }
@@ -273,17 +274,17 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
             g.drawRect(zombie2.hitbox.x, zombie2.hitbox.y, zombie2.hitbox.width, zombie2.hitbox.height);
         }
         for (int z = 0; z < zombies.length; z++) {
-        if (zombies[z].isAlive == true) {
-            g.drawImage(zombiePic, zombies[z].xpos, zombies[z].ypos, zombies[z].width, zombies[z].height, null);
-        }
+            if (zombies[z].isAlive == true) {
+                g.drawImage(zombiePic, zombies[z].xpos, zombies[z].ypos, zombies[z].width, zombies[z].height, null);
+            }
 
         }
         g.drawImage(curePic, cure.xpos, cure.ypos, cure.width, cure.height, null);
         if (bullet.isAlive == true) {
             g.drawImage(bulletPic, bullet.xpos, bullet.ypos, bullet.width, bullet.height, null);
         }
-        for (int x=0; x<zombies.length; x++) {
-            if (zombies[x].isAlive == false && zombie1.isAlive == false && zombie2.isAlive == false) {
+        for (int x = 0; x < zombies.length; x++) {
+            if (zombies[x].isAlive == false && zombie1.isAlive == false && zombie2.isAlive == false && boss.isAlive==true) {
                 g.drawImage(bossPic, boss.xpos, boss.ypos, boss.width, boss.height, null);
                 // HEALTH BAR
                 int hbarWidth = 200;
@@ -302,16 +303,6 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
             }
 
         }
-
-
-
-
-        }
-
-
-
-
-
 
 
         g.dispose();
@@ -415,7 +406,8 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
     public void mouseExited(MouseEvent e) {
 
 
-     }
+    }
+}
 
 
 
