@@ -30,8 +30,8 @@ public class Bullet {
             ypos = pYpos;
             dx =5;
             dy =5;
-            width = 60;
-            height = 60;
+            width = 20;
+            height = 10;
             isAlive = false;
             hitbox= new Rectangle(xpos, ypos, width, height);
 

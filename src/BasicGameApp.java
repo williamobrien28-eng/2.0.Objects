@@ -381,10 +381,10 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
     @Override
     public void mousePressed(MouseEvent e) {
         System.out.println(e.getPoint());
-
+        if (cowboy.isAlive == true){
         bullet.isAlive = true;
         bullet.xpos = e.getX();
-        bullet.ypos = e.getY();
+        bullet.ypos = e.getY();}
 
 
     }
