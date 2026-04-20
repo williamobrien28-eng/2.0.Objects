@@ -202,6 +202,9 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         if (boss.health == 0) {
             boss.isAlive = false;
         }
+        if (boss.hitbox.intersects(cowboy.hitbox)&& boss.isAlive==true){
+            cowboy.isAlive=false;
+        }
 
 
     }

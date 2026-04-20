@@ -31,7 +31,7 @@ public class Bullet {
             dx =5;
             dy =5;
             width = 20;
-            height = 10;
+            height = 12;
             isAlive = false;
             hitbox= new Rectangle(xpos, ypos, width, height);
 
