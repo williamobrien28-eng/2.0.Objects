@@ -30,7 +30,7 @@ public class Boss {
         dy =1;
         width = 400;
         height = 400;
-        isAlive = true;
+        isAlive = false;
         hitbox= new Rectangle(xpos, ypos, width, height);
         isCrashing = false;
         health = 100;
@@ -40,20 +40,22 @@ public class Boss {
 
     //The move method.  Everytime this is run (or "called") the hero's x position and y position change by dx and dy
     public void move() {
-        if(xpos >=950-width){
-            xpos=50;
+        if(xpos >= 1000-width){
+            dx=-dx;
+
 
         }
-
-        if(xpos <=0){
-            xpos=850;
+        if (xpos <= 0){
+            dx=-dx;
 
         }
-        if(ypos <=0){
-            ypos=1000;
+        if (ypos >=700-height){
+            dy=-dy;
+
+
         }
-        if(ypos >=700-height){
-            ypos = 1;
+        if (ypos <= 0){
+            dy=-dy;
 
         }
 

@@ -62,6 +62,8 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
     public Cure cure;
     public Bullet bullet;
     private Boss boss;
+    private boolean bossSpawned = false;
+    private boolean secondWaveSpawned = false;
 
 
     // Main method definition
@@ -102,7 +104,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         zombie1 = new Zombie(100, 300);
         zombie1.dx = -zombie1.dx;
         zombie2 = new Zombie(250, 250);
-        zombies = new Zombie[10];
+        zombies = new Zombie[12];
         boss = new Boss(100, 300);
         cure = new Cure(100, 100);
         bullet = new Bullet(100, 100);
@@ -199,12 +201,35 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
             bullet.isAlive = false;
         }
 
-        if (boss.health == 0) {
+        if (boss.health <=0) {
+            boss.health=0;
             boss.isAlive = false;
         }
         if (boss.hitbox.intersects(cowboy.hitbox)&& boss.isAlive==true){
             cowboy.isAlive=false;
         }
+        boolean allZombiesDead = true;
+        for (int x = 0; x < zombies.length; x++) {
+            if (zombies[x].isAlive == true) {
+                allZombiesDead = false;
+            }
+        }
+        // SPAWN SECOND WAVE
+        if (!secondWaveSpawned && zombie1.isAlive == false && zombie2.isAlive == false && allZombiesDead) {
+
+            for (int i = 0; i < zombies.length; i++) {
+                zombies[i] = new Zombie((int)(Math.random()*1000), (int)(Math.random()*700));
+            }
+
+            secondWaveSpawned = true;
+        }
+        if (!bossSpawned && zombie1.isAlive == false && zombie2.isAlive == false && allZombiesDead == true) {
+            boss.isAlive = true;
+            bossSpawned = true;
+        }
+    if (cowboy.isAlive==false){
+        bullet.isAlive=false;
+    }
 
 
     }
@@ -286,24 +311,23 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         if (bullet.isAlive == true) {
             g.drawImage(bulletPic, bullet.xpos, bullet.ypos, bullet.width, bullet.height, null);
         }
-        for (int x = 0; x < zombies.length; x++) {
-            if (zombies[x].isAlive == false && zombie1.isAlive == false && zombie2.isAlive == false && boss.isAlive==true) {
-                g.drawImage(bossPic, boss.xpos, boss.ypos, boss.width, boss.height, null);
-                // HEALTH BAR
-                int hbarWidth = 200;
-                int hbarHeight = 20;
-                int barX = boss.xpos + 100;   // centers it a little over boss
-                int barY = boss.ypos - 30;    // above boss
-                // background (red = missing health)
-                g.setColor(Color.RED);
-                g.fillRect(barX, barY, hbarWidth, hbarHeight);
-                // current health (green)
-                g.setColor(Color.GREEN);
-                g.fillRect(barX, barY, (boss.health * hbarWidth) / boss.maxHealth, hbarHeight);
-                //outline
-                g.setColor(Color.BLACK);
-                g.drawRect(barX, barY, hbarWidth, hbarHeight);
-            }
+        if (boss.isAlive) {
+
+            g.drawImage(bossPic, boss.xpos, boss.ypos, boss.width, boss.height, null);
+
+            int hbarWidth = 200;
+            int hbarHeight = 20;
+            int barX = boss.xpos + 100;
+            int barY = boss.ypos - 30;
+
+            g.setColor(Color.RED);
+            g.fillRect(barX, barY, hbarWidth, hbarHeight);
+
+            g.setColor(Color.GREEN);
+            g.fillRect(barX, barY, (boss.health * hbarWidth) / boss.maxHealth, hbarHeight);
+
+            g.setColor(Color.BLACK);
+            g.drawRect(barX, barY, hbarWidth, hbarHeight);
 
         }
 
@@ -342,6 +366,19 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
             // astro.ypos =astro.ypos-50;
             cowboy.dx = 10;
         }
+        if (e.getKeyCode() == 87){
+            cowboy.dy=-10;
+        }
+        if (e.getKeyCode() == 83){
+            cowboy.dy=10;
+        }
+        if (e.getKeyCode() == 65){
+            cowboy.dx=-10;
+        }
+        if (e.getKeyCode() == 68){
+            cowboy.dx=10;
+        }
+
 
     }
 
@@ -372,6 +409,19 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
             // astro.ypos =astro.ypos-50;
             cowboy.dx = 0;
         }
+        if (e.getKeyCode() == 87){
+            cowboy.dy=0;
+        }
+        if (e.getKeyCode() == 83){
+            cowboy.dy=0;
+        }
+        if (e.getKeyCode() == 65){
+            cowboy.dx=0;
+        }
+        if (e.getKeyCode() == 68){
+            cowboy.dx=0;
+        }
+
     }
 
     // step 3 : add methods
