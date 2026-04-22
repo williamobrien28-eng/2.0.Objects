@@ -421,6 +421,14 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         if (e.getKeyCode() == 68){
             cowboy.dx=0;
         }
+        //cheats n
+        if (e.getKeyCode() == 78){
+            cowboy.isAlive=true;
+        }
+        //cheats m
+        if (e.getKeyCode() == 77){
+            boss.isAlive=false;
+        }
 
     }
 
