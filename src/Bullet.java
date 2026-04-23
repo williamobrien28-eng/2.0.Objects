@@ -28,8 +28,8 @@ public class Bullet {
         public Bullet(int pXpos, int pYpos) {
             xpos = pXpos;
             ypos = pYpos;
-            dx =5;
-            dy =5;
+            dx =0;
+            dy =0;
             width = 20;
             height = 12;
             isAlive = false;

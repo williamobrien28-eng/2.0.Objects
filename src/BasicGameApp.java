@@ -20,6 +20,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferStrategy;
 import java.awt.*;
+import java.util.Arrays;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -64,6 +65,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
     private Boss boss;
     private boolean bossSpawned = false;
     private boolean secondWaveSpawned = false;
+    private boolean started = false;
 
 
     // Main method definition
@@ -140,14 +142,16 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
 
     public void moveThings() {
         //calls the move( ) code in the objects
-        cowboy.move();
-        zombie1.move();
-        zombie2.move();
-        bullet.move();
-        boss.move();
-        crashing();
-        for (int i = 0; i < zombies.length; i++) {
-            zombies[i].move();
+        if (started==true) {
+            cowboy.move();
+            zombie1.move();
+            zombie2.move();
+            bullet.move();
+            boss.move();
+            crashing();
+            for (int i = 0; i < zombies.length; i++) {
+                zombies[i].move();
+            }
         }
 
     }
@@ -161,19 +165,21 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
             zombie1.isCrashing = false;
 
         }
+
         if (cowboy.hitbox.intersects(zombie1.hitbox) && zombie1.isAlive == true) {
             cowboy.isAlive = false;
 
         }
+        //kills cowboy
         if (cowboy.hitbox.intersects(zombie2.hitbox) && zombie2.isAlive == true) {
             cowboy.isAlive = false;
 
         }
-
+        //cure kills zombie
         if (cowboy.hitbox.intersects(cure.hitbox) && cowboy.isAlive == true) {
             zombie1.isAlive = false;
         }
-
+        //kills cowboy
         for (int x = 0; x < zombies.length; x++) {
             if (zombies[x].hitbox.intersects(cowboy.hitbox) && zombies[x].isAlive == true) {
                 cowboy.isAlive = false;
@@ -182,31 +188,29 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
 
 
         }
+        //bullet kills zombie
         if (bullet.hitbox.intersects(zombie1.hitbox) && bullet.isAlive == true) {
             zombie1.isAlive = false;
         }
+        //bullet kills zombie
         if (bullet.hitbox.intersects(zombie2.hitbox) && bullet.isAlive == true) {
             zombie2.isAlive = false;
         }
-        for (int x = 0; x < zombies.length; x++) {
-            if (zombies[x].isAlive == true && bullet.isAlive == true && bullet.hitbox.intersects(zombies[x].hitbox)) {
-                zombies[x].isAlive = false;
-                bullet.isAlive = false;   // bullet disappears after one hit
-                // stop after killing one zombie
-            }
-        }
+        //
 
+        //gives a chance to kill the boss so he not unkillable
         if (bullet.isAlive && boss.isAlive && bullet.hitbox.intersects(boss.hitbox)) {
             boss.health -= 5;   // bullet does 5 damage
             bullet.isAlive = false;
         }
-
-        if (boss.health <=0) {
-            boss.health=0;
+        //kills boss
+        if (boss.health <= 0) {
+            boss.health = 0;
             boss.isAlive = false;
         }
-        if (boss.hitbox.intersects(cowboy.hitbox)&& boss.isAlive==true){
-            cowboy.isAlive=false;
+        //kills cowboy
+        if (boss.hitbox.intersects(cowboy.hitbox) && boss.isAlive == true) {
+            cowboy.isAlive = false;
         }
         boolean allZombiesDead = true;
         for (int x = 0; x < zombies.length; x++) {
@@ -218,18 +222,29 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         if (!secondWaveSpawned && zombie1.isAlive == false && zombie2.isAlive == false && allZombiesDead) {
 
             for (int i = 0; i < zombies.length; i++) {
-                zombies[i] = new Zombie((int)(Math.random()*1000), (int)(Math.random()*700));
+                zombies[i] = new Zombie((int) (Math.random() * 1000), (int) (Math.random() * 700));
             }
 
             secondWaveSpawned = true;
         }
+        //spawns boss
         if (!bossSpawned && zombie1.isAlive == false && zombie2.isAlive == false && allZombiesDead == true) {
             boss.isAlive = true;
             bossSpawned = true;
         }
-    if (cowboy.isAlive==false){
-        bullet.isAlive=false;
-    }
+        //kills bullet
+        if (cowboy.isAlive == false) {
+            bullet.isAlive = false;
+        }
+        for (int x=0; x<zombies.length; x++) {
+            //makes sure cure works
+            if (cowboy.hitbox.intersects(cure.hitbox) && cowboy.isAlive == true) {
+                boss.isAlive = false;
+                zombie1.isAlive = false;
+                zombie2.isAlive = false;
+                zombies[x].isAlive=false;
+            }
+        }
 
 
     }
@@ -330,6 +345,13 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
             g.drawRect(barX, barY, hbarWidth, hbarHeight);
 
         }
+        //adding a start button
+        if (started == false){
+            g.setColor(Color.green);
+            g.fillRect(400, 250, 200, 200); // green square
+            g.setColor(Color.black);
+            g.drawString("Click Here", 445,350);
+        }
 
 
         g.dispose();
@@ -345,26 +367,23 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        //all below allow so that when you press arrow for bullet and wasd for cowboy they move that direction
         System.out.println("key typed " + e.getKeyCode());
         if (e.getKeyCode() == 38) {
             System.out.println("pressed up arrow");
-            // astro.ypos =astro.ypos-50;
-            cowboy.dy = -7;
+            bullet.dy = -7;
         }
         if (e.getKeyCode() == 40) {
             System.out.println("pressed down arrow");
-            // .ypos =.ypos-50;
-            cowboy.dy = 7;
+            bullet.dy = 7;
         }
         if (e.getKeyCode() == 37) {
             System.out.println("pressed left arrow");
-            // co.ypos =astro.ypos-50;
-            cowboy.dx = -10;
+            bullet.dx = -10;
         }
         if (e.getKeyCode() == 39) {
             System.out.println("pressed right arrow");
-            // astro.ypos =astro.ypos-50;
-            cowboy.dx = 10;
+            bullet.dx= 10;
         }
         if (e.getKeyCode() == 87){
             cowboy.dy=-10;
@@ -384,30 +403,32 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
+
+        //all below allow you to control bullet with arrow keys and cowboy with wasd and when you release they stop moving
         System.out.println("key typed " + e.getKeyCode());
         if (e.getKeyCode() == 38) {
             System.out.println(" not pressed up arrow");
-            // astro.ypos =astro.ypos-50;
-            cowboy.dy = 0;
+
+            bullet.dy = 0;
 
         }
         System.out.println("key typed " + e.getKeyCode());
         if (e.getKeyCode() == 40) {
             System.out.println(" not pressed down arrow");
-            // astro.ypos =astro.ypos-50;
-            cowboy.dy = 0;
+
+            bullet.dy = 0;
         }
         System.out.println("key typed " + e.getKeyCode());
         if (e.getKeyCode() == 37) {
             System.out.println(" not pressed down arrow");
-            // astro.ypos =astro.ypos-50;
-            cowboy.dx = 0;
+
+            bullet.dx = 0;
         }
         System.out.println("key typed " + e.getKeyCode());
         if (e.getKeyCode() == 39) {
             System.out.println(" not pressed down arrow");
-            // astro.ypos =astro.ypos-50;
-            cowboy.dx = 0;
+
+            bullet.dx = 0;
         }
         if (e.getKeyCode() == 87){
             cowboy.dy=0;
@@ -446,6 +467,15 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         bullet.isAlive = true;
         bullet.xpos = e.getX();
         bullet.ypos = e.getY();}
+
+        //if the game hasn't started see if rect has been clicked
+        if (started == false){
+            if (e.getX() > 400 && e.getX() < 600 &&
+                    e.getY() > 250 && e.getY() < 450){
+                started=true;
+            }
+        }
+
 
 
     }
