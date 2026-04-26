@@ -52,6 +52,8 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
     public Image curePic;
     public Image bulletPic;
     public Image bossPic;
+    public Image winPic;
+    public Image losePic;
 
 
     //Declare the objects used in the program
@@ -66,6 +68,8 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
     private boolean bossSpawned = false;
     private boolean secondWaveSpawned = false;
     private boolean started = false;
+    private Win win;
+    private Lose lose;
 
 
     // Main method definition
@@ -102,6 +106,8 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         curePic = Toolkit.getDefaultToolkit().getImage("Cure.jpeg");
         bulletPic = Toolkit.getDefaultToolkit().getImage("Bullet.jpg");
         bossPic = Toolkit.getDefaultToolkit().getImage("Boss.jpg");
+        winPic = Toolkit.getDefaultToolkit().getImage("Win.png");
+        losePic = Toolkit.getDefaultToolkit().getImage("Lose.png");
         cowboy = new Cowboy(WIDTH / 2, HEIGHT / 2);
         zombie1 = new Zombie(100, 300);
         zombie1.dx = -zombie1.dx;
@@ -110,6 +116,8 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         boss = new Boss(100, 300);
         cure = new Cure(100, 100);
         bullet = new Bullet(100, 100);
+        win = new Win(0,0);
+        lose = new Lose(0,0);
         for (int q = 0; q < zombies.length; q++) {
             zombies[q] = new Zombie((int) (Math.random() * 1000), (int) (Math.random() * 100));
 
@@ -151,7 +159,10 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
             crashing();
             for (int i = 0; i < zombies.length; i++) {
                 zombies[i].move();
+
             }
+
+
         }
 
     }
@@ -201,7 +212,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         //gives a chance to kill the boss so he not unkillable
         if (bullet.isAlive && boss.isAlive && bullet.hitbox.intersects(boss.hitbox)) {
             boss.health -= 5;   // bullet does 5 damage
-            bullet.isAlive = false;
+
         }
         //kills boss
         if (boss.health <= 0) {
@@ -245,8 +256,48 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
                 zombies[x].isAlive=false;
             }
         }
+        for (int i = 0; i < zombies.length; i++) {
+            if (bullet.hitbox.intersects(zombies[i].hitbox) && bullet.isAlive==true) {
+                zombies[i].isAlive = false;
+            }
+        }
+        if (zombie1.isAlive == false && zombie2.isAlive == false && boss.isAlive == false && cowboy.isAlive == true && bossSpawned==true) {
+
+            win.isAlive = true;
+        }
+        if (win.isAlive==true){
+            bullet.isAlive=false;
+            cure.isAlive=false;
+        }
+        if (cowboy.isAlive==false){
+            lose.isAlive=true;
+            cure.isAlive=false;
+        }
 
 
+
+
+
+
+    }
+    //make sure the game can restart when you lose method just remakes everything
+    public void resetGame() {
+        cowboy = new Cowboy(50, 610);
+        zombie1 = new Zombie(100, 100);
+        zombie2 = new Zombie(250, 100);
+        for (int i = 0; i < zombies.length; i++) {
+            zombies[i] = new Zombie((int)(Math.random() * 1000), (int)(Math.random() * 400));
+        }
+        boss = new Boss(100, 300);
+        cure = new Cure(100, 100);
+        bullet = new Bullet(100, 100);
+        win.isAlive = false;
+        lose.isAlive = false;
+        bossSpawned = false;
+        secondWaveSpawned = false;
+        started = true;
+        cowboy.isAlive=true;
+        bullet.isAlive=true;
     }
 
     //Pauses or sleeps the computer for the amount specified in milliseconds
@@ -322,7 +373,16 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
             }
 
         }
-        g.drawImage(curePic, cure.xpos, cure.ypos, cure.width, cure.height, null);
+        if (win.isAlive==true){
+            g.drawImage(winPic, win.xpos, win.ypos, win.width, win.height, null);
+
+        }
+        if (lose.isAlive==true){
+            g.drawImage(losePic, lose.xpos, lose.ypos, lose.width, lose.height, null);
+
+        }
+        if (cure.isAlive==true){
+        g.drawImage(curePic, cure.xpos, cure.ypos, cure.width, cure.height, null);}
         if (bullet.isAlive == true) {
             g.drawImage(bulletPic, bullet.xpos, bullet.ypos, bullet.width, bullet.height, null);
         }
@@ -351,6 +411,13 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
             g.fillRect(400, 250, 200, 200); // green square
             g.setColor(Color.black);
             g.drawString("Click Here", 445,350);
+        }
+        if (lose.isAlive==true){
+            g.setColor(Color.green);
+            g.fillRect(400, 250, 200, 200); // green square
+            g.setColor(Color.black);
+            g.drawString("Click Here", 445,350);
+
         }
 
 
@@ -445,6 +512,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         //cheats n
         if (e.getKeyCode() == 78){
             cowboy.isAlive=true;
+            bullet.isAlive=true;
         }
         //cheats m
         if (e.getKeyCode() == 77){
@@ -475,6 +543,17 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
                 started=true;
             }
         }
+        //making the reset game work
+        if (lose.isAlive == true) {
+            if (e.getX() > 400 && e.getX() < 600 &&
+                    e.getY() > 250 && e.getY() < 450) {
+                resetGame();
+            }
+        }
+        else if(started==false){
+            started=true;
+        }
+
 
 
 
