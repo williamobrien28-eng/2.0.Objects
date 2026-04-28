@@ -106,8 +106,8 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         curePic = Toolkit.getDefaultToolkit().getImage("Cure.jpeg");
         bulletPic = Toolkit.getDefaultToolkit().getImage("Bullet.jpg");
         bossPic = Toolkit.getDefaultToolkit().getImage("Boss.jpg");
-        winPic = Toolkit.getDefaultToolkit().getImage("Win.png");
-        losePic = Toolkit.getDefaultToolkit().getImage("Lose.png");
+        winPic = Toolkit.getDefaultToolkit().getImage("Win2.jpg");
+        losePic = Toolkit.getDefaultToolkit().getImage("Lose2.jpg");
         cowboy = new Cowboy(WIDTH / 2, HEIGHT / 2);
         zombie1 = new Zombie(100, 300);
         zombie1.dx = -zombie1.dx;
@@ -125,7 +125,6 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         }
 
 
-        //todo: make a variable randy that generated a random number between 1-699
     }// BasicGameApp()
 
 
@@ -168,7 +167,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
     }
 
     public void crashing() {
-        //check to see if my astros crash into eachother
+        //check to see if things crash into eachother
 
 
         if (zombie1.hitbox.intersects(zombie2.hitbox)) {
@@ -260,10 +259,12 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
             if (bullet.hitbox.intersects(zombies[i].hitbox) && bullet.isAlive==true) {
                 zombies[i].isAlive = false;
             }
-        }
-        if (zombie1.isAlive == false && zombie2.isAlive == false && boss.isAlive == false && cowboy.isAlive == true && bossSpawned==true) {
+        }//allows the win screen to appear need to fix so that the array zombies are included
+        for (int x=0; x<zombies.length; x++) {
+            if (zombie1.isAlive == false && zombie2.isAlive == false && boss.isAlive == false && cowboy.isAlive == true && bossSpawned == true && zombies[x].isAlive==false) {
 
-            win.isAlive = true;
+                win.isAlive = true;
+            }
         }
         if (win.isAlive==true){
             bullet.isAlive=false;
@@ -282,7 +283,8 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
     }
     //make sure the game can restart when you lose method just remakes everything
     public void resetGame() {
-        cowboy = new Cowboy(50, 610);
+        //all code below just makes everything new so that the game can restart after
+        cowboy = new Cowboy(700, 610);
         zombie1 = new Zombie(100, 100);
         zombie2 = new Zombie(250, 100);
         for (int i = 0; i < zombies.length; i++) {
@@ -353,12 +355,12 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         g.clearRect(0, 0, WIDTH, HEIGHT);
         g.drawImage(backGroundPic, 0, 0, WIDTH, HEIGHT, null);
 
-        //draw the image of the astronaut
+        //draw the image of the cowboy if hes alive
         if (cowboy.isAlive == true) {
             g.drawImage(cowboyPic, cowboy.xpos, cowboy.ypos, cowboy.width, cowboy.height, null);
             g.drawRect(cowboy.hitbox.x, cowboy.hitbox.y, cowboy.hitbox.width, cowboy.hitbox.height);
         }
-
+        //all stuff like this makes sure things can die since they are only drawn if they are alive
         if (zombie1.isAlive == true) {
             g.drawImage(zombiePic, zombie1.xpos, zombie1.ypos, zombie1.width, zombie1.height, null);
             g.drawRect(zombie1.hitbox.x, zombie1.hitbox.y, zombie1.hitbox.width, zombie1.hitbox.height);
@@ -367,6 +369,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
             g.drawImage(zombiePic, zombie2.xpos, zombie2.ypos, zombie2.width, zombie2.height, null);
             g.drawRect(zombie2.hitbox.x, zombie2.hitbox.y, zombie2.hitbox.width, zombie2.hitbox.height);
         }
+        //same things here just with the array
         for (int z = 0; z < zombies.length; z++) {
             if (zombies[z].isAlive == true) {
                 g.drawImage(zombiePic, zombies[z].xpos, zombies[z].ypos, zombies[z].width, zombies[z].height, null);
@@ -387,14 +390,15 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
             g.drawImage(bulletPic, bullet.xpos, bullet.ypos, bullet.width, bullet.height, null);
         }
         if (boss.isAlive) {
+            //slightly different since this also draws a health bar
 
             g.drawImage(bossPic, boss.xpos, boss.ypos, boss.width, boss.height, null);
-
+            //sets the health car width and height and were the health bar wll be
             int hbarWidth = 200;
             int hbarHeight = 20;
             int barX = boss.xpos + 100;
             int barY = boss.ypos - 30;
-
+            //sets color
             g.setColor(Color.RED);
             g.fillRect(barX, barY, hbarWidth, hbarHeight);
 
@@ -412,11 +416,12 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
             g.setColor(Color.black);
             g.drawString("Click Here", 445,350);
         }
+        //makes so that the same button appears when you lose though it is technically a different button
         if (lose.isAlive==true){
             g.setColor(Color.green);
-            g.fillRect(400, 250, 200, 200); // green square
+            g.fillRect(400, 500, 200, 50); // green square
             g.setColor(Color.black);
-            g.drawString("Click Here", 445,350);
+            g.drawString("Click Here", 445,525);
 
         }
 
@@ -510,10 +515,12 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
             cowboy.dx=0;
         }
         //cheats n
+        //****this cheat no longer works because of win screen
         if (e.getKeyCode() == 78){
             cowboy.isAlive=true;
             bullet.isAlive=true;
         }
+
         //cheats m
         if (e.getKeyCode() == 77){
             boss.isAlive=false;
@@ -530,6 +537,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
+        //when you press the mouse the bullet goes there a little easier than using arrow keys though those are still a choice
         System.out.println(e.getPoint());
         if (cowboy.isAlive == true){
         bullet.isAlive = true;
@@ -543,10 +551,10 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
                 started=true;
             }
         }
-        //making the reset game work
+        //making the reset game work when they click rect game starts
         if (lose.isAlive == true) {
             if (e.getX() > 400 && e.getX() < 600 &&
-                    e.getY() > 250 && e.getY() < 450) {
+                    e.getY() > 100 && e.getY() < 600) {
                 resetGame();
             }
         }

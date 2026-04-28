@@ -28,8 +28,8 @@ public class Cure {
         ypos = pYpos;
         dx =0;
         dy =0;
-        width = 60;
-        height = 60;
+        width = 30;
+        height = 30;
         isAlive = true;
         hitbox= new Rectangle(xpos, ypos, width, height);
 

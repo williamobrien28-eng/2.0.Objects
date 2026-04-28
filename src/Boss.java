@@ -33,6 +33,7 @@ public class Boss {
         isAlive = false;
         hitbox= new Rectangle(xpos, ypos, width, height);
         isCrashing = false;
+        //makes the health bar possible
         health = 100;
         maxHealth = 100;
 

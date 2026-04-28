@@ -41,22 +41,22 @@ public class Cowboy {
 
     //The move method.  Everytime this is run (or "called") the hero's x position and y position change by dx and dy
     public void move() {
-        if(xpos >= 1000-width){
-            dx=-dx;
+        if(xpos >= 1050-width){
+            xpos=50;
 
 
         }
-       if (xpos <= 0){
-           dx=-dx;
+       if (xpos <= -50){
+           xpos=950;
 
        }
-       if (ypos >=700-height){
-           dy=-dy;
+       if (ypos >=750-height){
+           ypos=50;
 
 
        }
-        if (ypos <= 0){
-            dy=-dy;
+        if (ypos <= -50){
+            ypos=650;
 
         }
         xpos = xpos + dx;
