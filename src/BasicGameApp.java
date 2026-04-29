@@ -175,7 +175,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
             zombie1.isCrashing = false;
 
         }
-
+        //kills cowboy :(
         if (cowboy.hitbox.intersects(zombie1.hitbox) && zombie1.isAlive == true) {
             cowboy.isAlive = false;
 
@@ -255,6 +255,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
                 zombies[x].isAlive=false;
             }
         }
+        //bullet kills array zombies
         for (int i = 0; i < zombies.length; i++) {
             if (bullet.hitbox.intersects(zombies[i].hitbox) && bullet.isAlive==true) {
                 zombies[i].isAlive = false;
@@ -266,10 +267,12 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
                 win.isAlive = true;
             }
         }
+        //makes so just win screen
         if (win.isAlive==true){
             bullet.isAlive=false;
             cure.isAlive=false;
         }
+        //makes lose screen appear
         if (cowboy.isAlive==false){
             lose.isAlive=true;
             cure.isAlive=false;
